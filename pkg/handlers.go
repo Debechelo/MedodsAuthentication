@@ -8,7 +8,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-// GenerateTokensHandler
+// GenerateTokensHandler генерация access и refresh токенов
 func GenerateTokensHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	userID := r.URL.Query().Get("user_id")
 	ip := r.RemoteAddr
@@ -37,4 +37,22 @@ func GenerateTokensHandler(w http.ResponseWriter, r *http.Request, _ httprouter.
 		"refresh_Token": refreshToken,
 	}
 	json.NewEncoder(w).Encode(response)
+}
+
+// RefreshTokenHandler обновляет Access токен с использованием Refresh токена
+func RefreshTokenHandler(w http.ResponseWriter, r *http.Request) {
+
+	//newAccessToken, err := GenerateAccessToken(userID, ip)
+	//if err != nil {
+	//	log.Printf("Error generating new access token for user %s: %v", userID, err)
+	//	http.Error(w, "Error generating new access token", http.StatusInternalServerError)
+	//	return
+	//}
+
+	//// Ответ клиенту
+	//response := map[string]string{
+	//	"access_token": newAccessToken,
+	//}
+	//json.NewEncoder(w).Encode(response)
+
 }
