@@ -22,11 +22,19 @@ func GenerateTokensHandler(w http.ResponseWriter, r *http.Request, _ httprouter.
 		return
 	}
 
+	refreshToken, err := GenerateRefreshToken()
+	if err != nil {
+		log.Printf("Error generating access token for user %s: %v", userID, err)
+		http.Error(w, "Error generating access token", http.StatusInternalServerError)
+		return
+	}
+
 	log.Printf("Tokens generated for user %s", userID)
 
 	// Ответ клиенту
 	response := map[string]string{
-		"access_token": accessToken,
+		"access_token":  accessToken,
+		"refresh_Token": refreshToken,
 	}
 	json.NewEncoder(w).Encode(response)
 }
