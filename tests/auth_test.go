@@ -68,8 +68,6 @@ func TestGenerateAccessToken(t *testing.T) {
 }
 
 func TestGenerateRefreshToken(t *testing.T) {
-	hs512 := jwt.NewHS512([]byte("secret_key"))
-
 	t.Run("Проверка генерации токена", func(t *testing.T) {
 		token, err := pkg.GenerateRefreshToken()
 		if err != nil {
@@ -80,11 +78,9 @@ func TestGenerateRefreshToken(t *testing.T) {
 			t.Errorf("Expected a token, got empty string")
 		}
 
-		// Проверяем валидность сгенерированного токена
-		var claims pkg.AccessToken
-		_, err = jwt.Verify([]byte(token), hs512, &claims)
-		if err != nil {
-			t.Errorf("Failed to verify token: %v", err)
+		// Проверка длины токена, если это важно
+		if len(token) != 64 { // Поскольку вы используете 32 байта, закодированных в hex, итоговая длина будет 64
+			t.Errorf("Expected token length 64, got %d", len(token))
 		}
 	})
 }

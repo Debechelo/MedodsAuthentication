@@ -9,11 +9,14 @@ import (
 )
 
 func main() {
+	log.Println("Initializing the database...")
+	pkg.InitializeDB()
+
 	router := httprouter.New()
 
 	// Роуты  для работы с токенами
 	router.POST("/token", pkg.GenerateTokensHandler)
-	//router.GET("/token", pkg.RefreshTokenHandler())
+	router.POST("/token/refresh", pkg.RefreshTokenHandler)
 
 	// Запуск сервера
 	log.Println("Starting server on :8080")

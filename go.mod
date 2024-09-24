@@ -8,6 +8,7 @@ require (
 )
 
 require (
+	github.com/lib/pq v1.10.9 // indirect
 	github.com/magefile/mage v1.9.0 // indirect
 	golang.org/x/crypto v0.27.0 // indirect
 	golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543 // indirect

@@ -1,7 +1,8 @@
 package pkg
 
 import (
-	"golang.org/x/crypto/bcrypt"
+	"crypto/rand"
+	"encoding/hex"
 	"log"
 	"time"
 
@@ -14,10 +15,6 @@ var hs512 = jwt.NewHS512([]byte("secret_key"))
 type AccessToken struct {
 	UserID string `json:"user_id"`
 	IP     string `json:"ip"`
-	jwt.Payload
-}
-
-type RefreshToken struct {
 	jwt.Payload
 }
 
@@ -45,31 +42,12 @@ func GenerateAccessToken(userID, ip string) (string, error) {
 
 // GenerateRefreshToken генерирует Refresh токен
 func GenerateRefreshToken() (string, error) {
-	now := time.Now()
-	claims := RefreshToken{
-		Payload: jwt.Payload{
-			IssuedAt:       jwt.NumericDate(now),
-			ExpirationTime: jwt.NumericDate(now.Add(15 * time.Minute)),
-		},
-	}
-
-	token, err := jwt.Sign(claims, hs512)
+	token := make([]byte, 32)
+	_, err := rand.Read(token)
 	if err != nil {
-		log.Printf("Error signing refresh token: %v", err)
-		return "", err
-	}
-
-	_, err = makeHashToken(token) //hashedToken
-	if err != nil {
-		log.Printf("Error hashing refresh token: %v", err)
 		return "", err
 	}
 
 	log.Println("Refresh token generated")
-	return string(token), nil
-}
-
-func makeHashToken(token []byte) (string, error) {
-	hashedToken, err := bcrypt.GenerateFromPassword(token, bcrypt.DefaultCost)
-	return string(hashedToken), err
+	return hex.EncodeToString(token), nil
 }
